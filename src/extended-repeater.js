@@ -1,29 +1,36 @@
 const CustomError = require("../extensions/custom-error");
 
 module.exports = function repeater(str, options) {
-
+    let newStr = []
+    let almostThere
+    if(String(options['addition'])){
+        if(options["additionRepeatTimes"]) {
+            newStr.push(str + String(options["addition"]))
+            for (let i = 1; i < options["additionRepeatTimes"]; i++) {
+                newStr.push(String(options["addition"]))
+            }
+        } else {
+            newStr.push(str)
+            newStr.push(options['addition'])
+        }
+    }
+    if(options["additionRepeatTimes"]){
+        almostThere = newStr.join(options["additionSeparator"] || "|")
+    } else {
+        almostThere = newStr.join("")
+    }
+    let completedArr = []
+    if(options["repeatTimes"]){
+        if(newStr.length !== 0){
+            for (let i = 0; i < options["repeatTimes"]; i++){
+                completedArr.push(almostThere)
+            }
+        }
+        else {
+            for (let i = 0; i < options["repeatTimes"]; i++){
+                completedArr.push(str)
+            }
+        }
+    }
+    return completedArr.length > 0 ? completedArr.join(options["separator"] || "+") : almostThere
 };
-
-
-/*
-    str это строка, которая будет повторена
-options это объект опций, который содержит следующие свойства:
-    repeatTimes устанавливает число повторений str
-separator это строка, разделяющая повторения str
-addition это дополнительная строка, которая будет добавлена после каждого повторения str
-additionRepeatTimes устанавливает число повторений addition
-additionSeparator это строка, разделяющая повторения addition
-Параметры str и addition по умолчанию являются строками. В случае, если они другого типа, он должны быть преобразованы
-к строке.
-
-    Параметры separator и additionSeparator являются строками.
-
-    repeatTimes и additionRepeatTimes являются целыми числами (в случае отсутствия любого из них соответствующая строка
-    не повторяется).
-
-Единственный обязательный параметр — это str, остальные могут не быть переданы. Значение separator по умолчанию это '+'.
-Значение additionSeparator по умолчанию это '|'.
-
-    Например: repeater('STRING', { repeatTimes: 3, separator: '**', addition: 'PLUS', additionRepeatTimes: 3, additionSeparator: '00' }) =>
-    'STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS**STRINGPLUS00PLUS00PLUS'
- */
